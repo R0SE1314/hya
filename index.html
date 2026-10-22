@@ -1,0 +1,1948 @@
+
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>一滴泪 · 私人档案</title>
+  <style>
+    *{box-sizing:border-box}
+    html{
+      scroll-behavior:smooth;
+      -webkit-text-size-adjust:100%;
+      text-size-adjust:100%;
+    }
+    body{
+      margin:0;
+      width:100%;
+      min-height:100vh;
+      min-width:0;
+      overflow-x:hidden;
+      color:rgb(41,67,76);
+      background:linear-gradient(145deg,rgb(249,252,252),rgb(232,243,246) 55%,rgb(247,249,247));
+      font-family:"Noto Serif SC","Source Han Serif SC","Songti SC",serif;
+      font-size:13px;
+    }
+    body.locked{overflow:hidden}
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:1;
+      pointer-events:none;
+      opacity:.27;
+      background:
+        repeating-linear-gradient(90deg,transparent 0,transparent 119px,rgba(81,128,142,.07) 120px),
+        repeating-linear-gradient(0deg,transparent 0,transparent 119px,rgba(81,128,142,.045) 120px);
+    }
+    ::selection{color:rgb(28,62,73);background:rgba(153,205,217,.55)}
+    button,a{font:inherit}
+    button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+    .shell{
+      position:relative;
+      z-index:2;
+      width:100%;
+      max-width:100%;
+      min-width:0;
+      transition:filter .7s ease,transform .7s ease;
+    }
+    .locked .shell{filter:blur(6px);transform:scale(1.005)}
+    .top{
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      height:62px;
+      padding:0 clamp(14px,3.8vw,44px);
+      display:grid;
+      grid-template-columns:max-content minmax(0,1fr) 31px;
+      align-items:center;
+      gap:clamp(8px,2.4vw,28px);
+      width:100%;
+      max-width:100vw;
+      min-width:0;
+      z-index:80;
+      background:rgba(242,249,250,.9);
+      backdrop-filter:blur(18px);
+      border-bottom:1px solid rgba(58,104,118,.12);
+    }
+    .brand{
+      min-width:0;
+      border:0;
+      background:none;
+      padding:8px 0;
+      color:rgb(47,82,93);
+      font-family:ui-monospace,"SFMono-Regular",Consolas,monospace;
+      font-size:8.5px;
+      letter-spacing:2.15px;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    .brand-compact{display:none}
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:clamp(12px,2vw,26px);
+      max-width:100%;
+      min-width:0;
+      overflow-x:auto;
+      overflow-y:hidden;
+      overscroll-behavior-inline:contain;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+    }
+    .nav::-webkit-scrollbar{display:none}
+    .nav button{
+      flex:0 0 auto;
+      border:0;
+      background:none;
+      padding:8px 0;
+      color:rgb(74,104,113);
+      font-size:10.5px;
+      letter-spacing:1.6px;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    .nav button:hover{color:rgb(37,105,129)}
+    .music-toggle{
+      position:relative;
+      z-index:1;
+      justify-self:end;
+      flex:0 0 auto;
+      width:31px;
+      height:31px;
+      border:1px solid rgba(53,107,124,.22);
+      border-radius:50%;
+      background:rgba(255,255,255,.28);
+      display:grid;
+      place-items:center;
+      color:rgb(51,101,117);
+      cursor:pointer;
+      transition:.25s;
+    }
+    .music-toggle:hover{background:rgba(255,255,255,.7);border-color:rgba(53,107,124,.4)}
+    .music-toggle svg{
+      width:13px;
+      height:13px;
+      fill:none;
+      stroke:currentColor;
+      stroke-width:1.7;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+    .music-toggle::after{
+      content:"";
+      position:absolute;
+      right:1px;
+      bottom:1px;
+      width:4px;
+      height:4px;
+      border-radius:50%;
+      background:rgb(161,137,119);
+      opacity:.5;
+    }
+    .music-toggle.is-playing::after{
+      background:rgb(47,133,153);
+      opacity:1;
+      box-shadow:0 0 0 3px rgba(47,133,153,.1);
+    }
+    main{min-height:100vh}
+    .hero{
+      min-height:96vh;
+      padding:108px 7vw 64px;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(290px,.5fr);
+      gap:7vw;
+      align-items:center;
+      position:relative;
+      width:100%;
+      max-width:100%;
+      overflow:hidden;
+      overflow:clip;
+    }
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:auto 0 0;
+      height:38vh;
+      border-top:1px solid rgba(74,125,140,.1);
+      border-radius:50% 50% 0 0 / 13% 13% 0 0;
+      transform:scaleX(1.35);
+      pointer-events:none;
+    }
+    .hero-copy,.tear-specimen{position:relative;z-index:2;min-width:0}
+    .eyebrow{
+      margin:0;
+      font-family:ui-monospace,"SFMono-Regular",Consolas,monospace;
+      font-size:8.5px;
+      letter-spacing:2.25px;
+      color:rgb(100,127,136);
+    }
+    .hero-title{
+      margin:13px 0;
+      font-size:62px;
+      line-height:1;
+      font-weight:500;
+      letter-spacing:7px;
+      color:rgb(33,64,74);
+    }
+    .hero-title span{color:rgb(77,142,162)}
+    .rain-line{
+      margin:0;
+      font-size:13px;
+      line-height:1.7;
+      letter-spacing:2.4px;
+      color:rgb(68,108,121);
+    }
+    .fact-pill{
+      border:1px solid rgba(62,111,126,.2);
+      border-radius:3px;
+      background:rgba(255,255,255,.28);
+      padding:6px 9px;
+      font-size:10px;
+      line-height:1.55;
+      letter-spacing:1.05px;
+      color:rgb(65,99,110);
+      overflow-wrap:anywhere;
+    }
+    .fact-pill.accent{
+      color:rgb(43,92,108);
+      border-color:rgba(47,111,131,.31);
+      background:rgba(222,240,245,.42);
+    }
+    .mini-quote{
+      margin:25px 0 0;
+      font-size:10px;
+      letter-spacing:1.8px;
+      color:rgb(91,116,124);
+      opacity:.8;
+    }
+    .tear-specimen{
+      width:100%;
+      max-width:100%;
+      min-width:0;
+      border-top:1px solid rgba(67,118,134,.2);
+      border-bottom:1px solid rgba(67,118,134,.16);
+      padding:13px 4px 12px;
+    }
+    .specimen-head,.specimen-foot{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      font-family:ui-monospace,"SFMono-Regular",Consolas,monospace;
+      font-size:7.5px;
+      letter-spacing:1.25px;
+      color:rgb(90,118,127);
+    }
+    .specimen-art{padding:12px 4px 10px;display:grid;place-items:center}
+    .specimen-art svg{width:min(174px,55vw);height:auto;display:block}
+    .composition,.ability-composition{
+      border-top:1px solid rgba(67,118,134,.14);
+      border-bottom:1px solid rgba(67,118,134,.12);
+      padding:11px 2px 12px;
+    }
+    .ability-composition{margin-top:10px;border-top-color:rgba(151,121,101,.18)}
+    .composition-head{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      align-items:baseline;
+      gap:14px;
+      padding-bottom:8px;
+      font-family:ui-monospace,"SFMono-Regular",Consolas,monospace;
+      font-size:7px;
+      letter-spacing:1.25px;
+      color:rgb(99,124,132);
+    }
+    .composition-head span{min-width:0;overflow-wrap:anywhere}
+    .composition-head b{
+      margin-left:auto;
+      white-space:nowrap;
+      font-weight:400;
+      color:rgb(151,121,101);
+    }
+    .component{
+      display:grid;
+      grid-template-columns:74px minmax(38px,1fr) 30px;
+      align-items:center;
+      gap:8px;
+      padding:5px 0;
+      font-size:9.5px;
+      letter-spacing:.8px;
+      color:rgb(65,97,107);
+    }
+    .component-track{position:relative;height:1px;background:rgba(65,116,132,.13)}
+    .component-track i{
+      position:absolute;
+      left:0;
+      top:0;
+      height:1px;
+      background:rgba(66,133,154,.6);
+      transform-origin:left;
+      animation:trackIn 1.15s .55s both cubic-bezier(.2,.7,.2,1);
+    }
+    .emotion-composition .component-track i{background:rgba(75,143,163,.68)}
+    .emotion-composition .component:nth-of-type(2) .component-track i{background:rgba(170,135,113,.7)}
+    .emotion-composition .component:nth-of-type(3) .component-track i{background:rgba(88,124,151,.64)}
+    .emotion-composition .component:nth-of-type(4) .component-track i{background:rgba(82,151,139,.64)}
+    .emotion-composition .component:nth-of-type(5) .component-track i{background:rgba(169,143,122,.6)}
+    .emotion-composition .component:nth-of-type(6) .component-track i{background:rgba(100,125,140,.52)}
+    .component em{
+      font-family:ui-monospace,"SFMono-Regular",Consolas,monospace;
+      font-size:7px;
+      font-style:normal;
+      letter-spacing:.4px;
+      text-align:right;
+      color:rgb(115,137,143);
+    }
+    .ability-chart{
+      position:relative;
+      width:min(100%,300px);
+      max-width:100%;
+      min-width:0;
+      margin:8px auto 2px;
+      padding-inline:4px;
+    }
+    .ability-chart svg{
+      display:block;
+      width:100%;
+      max-width:100%;
+      height:auto;
+      overflow:visible;
+    }
+    .radar-grid{
+      fill:none;
+      stroke:rgba(69,125,141,.23);
+      stroke-width:1;
+    }
+    .radar-axis{
+      fill:none;
+      stroke:rgba(69,125,141,.2);
+      stroke-width:1;
+    }
+    .radar-fill{
+      fill:url(#radarWash);
+      stroke:rgb(57,128,150);
+      stroke-width:2.2;
+      stroke-linejoin:round;
+      transform-box:fill-box;
+      transform-origin:center;
+      animation:radarBloom 1.05s .35s both cubic-bezier(.18,.75,.2,1);
+    }
+    .radar-node{
+      fill:rgb(66,139,160);
+      stroke:rgb(249,252,252);
+      stroke-width:1.8;
+    }
+    .radar-label{
+      fill:rgb(54,91,103);
+      font-family:"Noto Serif SC","Source Han Serif SC","Songti SC",serif;
+      font-size:10px;
+      letter-spacing:1.15px;
+    }
+    .radar-guide{
+      fill:none;
+      stroke:rgba(151,121,101,.38);
+      stroke-width:1;
+    }
+    @keyframes radarBloom{
+      from{opacity:0;transform:scale(.16)}
+      to{opacity:1;transform:scale(1)}
+    }
+    .specimen-foot{padding-top:9px;flex-wrap:wrap}
+    @keyframes trackIn{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+    .section{padding:82px 8vw;position:relative}
+    .inner{width:100%;max-width:1130px;min-width:0;margin:0 auto}
+    .section-head>*,
+    .dossier-grid>*,
+    .links-grid>*,
+    .draw-layout>*,
+    .style-editorial>*,
+    .style-annotation>*,
+    .notice-board>*{min-width:0}
+    .section-head{
+      display:grid;
+      grid-template-columns:minmax(220px,.62fr) minmax(0,1.38fr);
+      gap:7vw;
+      align-items:start;
+      margin-bottom:38px;
+      padding-top:20px;
+      border-top:1px solid rgba(58,105,120,.17);
+    }
+    .section-head.profile-head{grid-template-columns:1fr;margin-bottom:34px}
+    .section-title{
+      margin:7px 0 0;
+      font-size:34px;
+      line-height:1.2;
+      letter-spacing:3px;
+      font-weight:500;
+      color:rgb(38,73,84);
+    }
+    .section-note{
+      margin:5px 0 0;
+      max-width:510px;
+      font-size:10.5px;
+      line-height:1.8;
+      letter-spacing:.85px;
+      color:rgb(86,112,121);
+    }
+    .dossier-grid{
+      display:grid;
+      grid-template-columns:minmax(190px,.5fr) minmax(0,1.5fr);
+      gap:8vw;
+    }
+    .dossier-mark{align-self:start;padding-top:7px}
+    .dossier-mark strong{
+      display:block;
+      font-size:28px;
+      font-weight:500;
+      letter-spacing:3px;
+      color:rgb(43,82,95);
+    }
+    .dossier-mark span{
+      display:block;
+      margin-top:9px;
+      font-family:ui-monospace,"SFMono-Regular",Consolas,monospace;
+      font-size:8px;
+      letter-spacing:1.55px;
+      color:rgb(103,129,138);
+    }
+    .profile-facts{
+      display:flex;
+      flex-wrap:wrap;
+      gap:7px;
+      align-content:start;
+    }
+    .style-band{
+      background:rgba(213,234,239,.33);
+      border-top:1px solid rgba(62,108,122,.1);
+      border-bottom:1px solid rgba(62,108,122,.1);
+    }
+    .style-editorial{
+      display:grid;
+      grid-template-columns:minmax(260px,.72fr) minmax(0,1.28fr);
+      border-top:1px solid rgba(55,103,118,.2);
+      border-bottom:1px solid rgba(55,103,118,.18);
+    }
+    .style-nav{padding:18px 4.5vw 22px 0;border-right:1px solid rgba(55,103,118,.15)}
+    .style-nav-head{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      align-items:center;
+      gap:8px 14px;
+      margin:0 0 10px;
+      padding-bottom:12px;
+      border-bottom:1px solid rgba(55,103,118,.1);
+      font-family:ui-monospace,"SFMono-Regular",Consolas,monospace;
+      font-size:7.5px;
+      letter-spacing:1.55px;
+      color:rgb(93,120,129);
+    }
+    .style-nav-head b{font-weight:400;color:rgb(142,117,99)}
+    .style-tools{display:grid}
+    .style-pill{
+      position:relative;
+      display:grid;
+      grid-template-columns:35px 1fr auto;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+      min-height:42px;
+      border:0;
+      border-bottom:1px solid rgba(55,103,118,.095);
+      background:none;
+      color:rgb(65,97,107);
+      padding:7px 4px;
+      text-align:left;
+      cursor:pointer;
+      transition:color .24s ease,padding .24s ease,background .24s ease;
+    }
+    .style-pill:last-child{border-bottom:0}
+    .style-pill:hover{color:rgb(34,103,126);padding-left:9px}
+    .style-no{
+      font-family:ui-monospace,"SFMono-Regular",Consolas,monospace;
+      font-size:7.5px;
+      letter-spacing:1px;
+      color:rgb(112,133,139);
+    }
+    .style-name{font-size:12px;letter-spacing:1.8px;overflow-wrap:anywhere}
+    .style-dot{
+      width:4px;
+      height:4px;
+      border:1px solid rgba(68,126,143,.5);
+      border-radius:50%;
+    }
+    .style-pill.active{
+      padding-left:9px;
+      color:rgb(35,87,104);
+      background:linear-gradient(90deg,rgba(255,255,255,.25),transparent);
+    }
+    .style-pill.active::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:9px;
+      bottom:9px;
+      width:1px;
+      background:rgb(151,121,101);
+    }
+    .style-pill.active .style-no{color:rgb(151,121,101)}
+    .style-pill.active .style-dot{
+      background:rgb(54,128,149);
+      border-color:rgb(54,128,149);
+      box-shadow:0 0 0 3px rgba(54,128,149,.09);
+    }
+    .style-annotation{
+      position:relative;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 58px;
+      gap:4vw;
+      padding:23px 0 27px 5vw;
+      min-height:322px;
+      overflow:hidden;
+    }
+    .style-annotation::before{
+      content:attr(data-ghost);
+      position:absolute;
+      right:14px;
+      bottom:-31px;
+      font-size:140px;
+      line-height:1;
+      color:rgba(68,125,142,.045);
+      pointer-events:none;
+    }
+    .style-copy-wrap{
+      position:relative;
+      z-index:2;
+      align-self:stretch;
+      display:grid;
+      grid-template-rows:auto auto 1fr;
+      transition:opacity .2s ease,transform .2s ease;
+    }
+    .style-copy-wrap.is-changing{opacity:0;transform:translateY(5px)}
+    .style-annotation-meta{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      gap:20px;
+      font-family:ui-monospace,"SFMono-Regular",Consolas,monospace;
+      font-size:7.5px;
+      letter-spacing:1.45px;
+      color:rgb(92,118,127);
+    }
+    .style-annotation-meta b{font-weight:400;color:rgb(146,119,100)}
+    .style-annotation-rule{
+      width:100%;
+      height:1px;
+      background:rgba(58,105,120,.16);
+      margin:16px 0 24px;
+      transform-origin:left;
+      transition:transform .44s ease;
+    }
+    .style-annotation.is-changing .style-annotation-rule{transform:scaleX(.35)}
+    .style-term{
+      margin:0;
+      font-size:31px;
+      line-height:1.2;
+      letter-spacing:4px;
+      font-weight:500;
+      color:rgb(38,76,89);
+    }
+    .style-explanation{
+      max-width:610px;
+      margin:17px 0 0;
+      font-size:16px;
+      line-height:1.95;
+      letter-spacing:1.25px;
+      color:rgb(50,83,94);
+    }
+    .style-side{
+      position:relative;
+      z-index:2;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:space-between;
+      padding-top:2px;
+    }
+    .style-side-index{
+      font-family:ui-monospace,"SFMono-Regular",Consolas,monospace;
+      font-size:26px;
+      letter-spacing:1px;
+      color:rgb(153,126,107);
+      font-weight:300;
+    }
+    .style-side-line{
+      width:1px;
+      flex:1;
+      margin:14px 0;
+      background:linear-gradient(rgba(57,105,120,.22),rgba(57,105,120,.02));
+    }
+    .style-side-label{
+      writing-mode:vertical-rl;
+      font-family:ui-monospace,"SFMono-Regular",Consolas,monospace;
+      font-size:7px;
+      letter-spacing:1.7px;
+      color:rgb(102,126,134);
+    }
+    .notes-band{
+      background:linear-gradient(165deg,rgba(247,251,251,.7),rgba(219,237,241,.43));
+      border-top:1px solid rgba(61,107,121,.1);
+      border-bottom:1px solid rgba(61,107,121,.1);
+    }
+    .notice-board{
+      border-top:1px solid rgba(58,103,118,.18);
+      border-bottom:1px solid rgba(58,103,118,.18);
+      display:grid;
+      grid-template-columns:.85fr 1.15fr;
+    }
+    .notice-column{padding:25px 32px 27px 0}
+    .notice-column + .notice-column{
+      border-left:1px solid rgba(58,103,118,.13);
+      padding-left:32px;
+      padding-right:0;
+    }
+    .notice-column h3{
+      margin:0 0 16px;
+      font-size:11.5px;
+      font-weight:500;
+      letter-spacing:2.3px;
+      color:rgb(49,98,114);
+    }
+    .notice-item{
+      position:relative;
+      margin:0;
+      padding:7px 0 7px 15px;
+      font-size:10.5px;
+      line-height:1.72;
+      letter-spacing:.6px;
+      color:rgb(66,95,104);
+      border-bottom:1px solid rgba(58,103,118,.07);
+    }
+    .notice-item:last-child{border-bottom:0}
+    .notice-item::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:15px;
+      width:4px;
+      height:4px;
+      border:1px solid rgba(57,123,144,.5);
+      border-radius:50%;
+    }
+    .notice-item strong{font-weight:500;color:rgb(40,84,98)}
+    .notice-callout{
+      grid-column:1/-1;
+      margin:0;
+      padding:12px 0;
+      border-top:1px solid rgba(58,103,118,.12);
+      font-size:9.5px;
+      letter-spacing:1.1px;
+      color:rgb(83,109,117);
+    }
+    .links-grid{
+      display:grid;
+      grid-template-columns:minmax(180px,.46fr) minmax(0,1.54fr);
+      gap:7vw;
+    }
+    .link-list{border-top:1px solid rgba(57,103,117,.18)}
+    .link-row{
+      display:grid;
+      grid-template-columns:55px 1fr 22px;
+      align-items:center;
+      gap:15px;
+      padding:19px 0;
+      border-bottom:1px solid rgba(57,103,117,.13);
+      text-decoration:none;
+      color:rgb(45,79,90);
+      transition:.23s;
+    }
+    .link-row:hover{color:rgb(32,104,129);padding-left:7px}
+    .link-row small{
+      font-family:ui-monospace,"SFMono-Regular",Consolas,monospace;
+      font-size:7.5px;
+      letter-spacing:1.5px;
+      color:rgb(94,122,131);
+    }
+    .link-row strong{font-size:18px;font-weight:500;letter-spacing:2.3px}
+    .link-row span{font-size:14px}
+    .quote-band{
+      min-height:330px;
+      padding:62px 9vw;
+      display:flex;
+      align-items:center;
+      position:relative;
+      overflow:hidden;
+      background:rgba(208,232,238,.26);
+      border-top:1px solid rgba(61,107,121,.1);
+      border-bottom:1px solid rgba(61,107,121,.1);
+    }
+    .quote-band::before{
+      content:"";
+      position:absolute;
+      left:-8vw;
+      right:-8vw;
+      bottom:2vh;
+      height:20vh;
+      border-top:1px solid rgba(65,120,138,.12);
+      border-radius:50%;
+      transform:rotate(-1.8deg);
+    }
+    .quote-inner{
+      position:relative;
+      z-index:2;
+      width:min(640px,100%);
+      margin-left:auto;
+    }
+    .quote-inner p{
+      margin:0;
+      font-size:15px;
+      line-height:1.82;
+      letter-spacing:2.15px;
+      color:rgba(46,80,91,.78);
+    }
+    .quote-inner p span{display:block}
+    .quote-inner em{font-style:normal;color:rgba(63,121,140,.76)}
+    .quote-coda{
+      margin-top:21px!important;
+      font-size:8.5px!important;
+      letter-spacing:2.2px!important;
+      color:rgba(79,110,120,.62)!important;
+    }
+    .draw-section{padding:82px 8vw 94px}
+    .draw-layout{
+      display:grid;
+      grid-template-columns:minmax(190px,.5fr) minmax(0,1.5fr);
+      gap:7vw;
+      align-items:start;
+    }
+    .fortune{
+      position:relative;
+      border-top:1px solid rgba(62,108,122,.22);
+      border-bottom:1px solid rgba(62,108,122,.18);
+      padding:18px 22px 21px;
+      min-height:302px;
+      display:grid;
+      grid-template-rows:auto 1fr auto;
+      overflow:hidden;
+    }
+    .fortune::before{
+      content:"泪";
+      position:absolute;
+      right:15px;
+      top:-20px;
+      font-size:125px;
+      line-height:1;
+      color:rgba(106,163,180,.055);
+      pointer-events:none;
+    }
+    .fortune-kicker{
+      display:flex;
+      justify-content:space-between;
+      gap:18px;
+      padding-bottom:12px;
+      border-bottom:1px solid rgba(62,108,122,.11);
+      font-family:ui-monospace,"SFMono-Regular",Consolas,monospace;
+      font-size:7.5px;
+      letter-spacing:1.5px;
+      color:rgb(94,121,130);
+    }
+    .fortune-stage{
+      position:relative;
+      z-index:2;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      padding:23px 2vw;
+      transition:opacity .22s ease,transform .22s ease;
+    }
+    .fortune.drawing .fortune-stage{opacity:.08;transform:translateY(7px)}
+    .fortune blockquote{
+      margin:0;
+      font-size:16px;
+      line-height:1.76;
+      letter-spacing:1.4px;
+      color:rgb(41,78,91);
+    }
+    .fortune-source{
+      margin:5px 0 0;
+      font-size:9px;
+      letter-spacing:1.35px;
+      color:rgb(97,123,132);
+    }
+    .draw-button{
+      position:relative;
+      z-index:2;
+      justify-self:start;
+      border:0;
+      border-bottom:1px solid rgba(44,106,127,.38);
+      background:none;
+      color:rgb(40,93,111);
+      padding:6px 0;
+      font-size:10px;
+      letter-spacing:1.4px;
+      cursor:pointer;
+    }
+    .draw-button:hover{color:rgb(30,109,137);padding-left:3px}
+    .draw-button:disabled{opacity:.55;cursor:wait}
+    .analysis-modal{
+      position:fixed;
+      inset:0;
+      z-index:900;
+      display:grid;
+      place-items:center;
+      width:100%;
+      max-width:100%;
+      min-width:0;
+      padding:18px;
+      background:rgba(220,238,242,.68);
+      backdrop-filter:blur(20px);
+      overflow:auto;
+      overscroll-behavior:contain;
+      transition:opacity .62s ease,visibility .62s ease;
+    }
+    .analysis-modal[hidden]{display:none}
+    .analysis-modal.closing{opacity:0;visibility:hidden;pointer-events:none}
+    .analysis-card{
+      position:relative;
+      width:min(670px,100%);
+      max-width:100%;
+      min-width:0;
+      max-height:92vh;
+      max-height:calc(100dvh - 36px);
+      overflow:auto;
+      overscroll-behavior:contain;
+      -webkit-overflow-scrolling:touch;
+      border-top:1px solid rgba(61,110,125,.24);
+      border-bottom:1px solid rgba(61,110,125,.2);
+      background:rgba(249,252,252,.94);
+      box-shadow:0 30px 90px rgba(48,85,98,.13);
+      padding:20px 24px 23px;
+    }
+    .analysis-head{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      padding-bottom:12px;
+      border-bottom:1px solid rgba(61,105,119,.12);
+      font-family:ui-monospace,"SFMono-Regular",Consolas,monospace;
+      font-size:7.5px;
+      letter-spacing:1.6px;
+      color:rgb(91,118,127);
+    }
+    .live{color:rgb(151,121,101);white-space:nowrap}
+    .analysis-visual{
+      display:grid;
+      place-items:center;
+      min-height:245px;
+      position:relative;
+      overflow:hidden;
+    }
+    .analysis-visual::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:31px;
+      width:1px;
+      height:178px;
+      transform:translateX(-50%);
+      background:linear-gradient(rgba(78,140,160,.28),rgba(78,140,160,0));
+    }
+    .fall-tear{
+      width:72px;
+      height:auto;
+      z-index:2;
+      filter:drop-shadow(0 13px 14px rgba(68,135,156,.16));
+      animation:tearFall 1.9s cubic-bezier(.45,.02,.72,.75) both;
+    }
+    .basin{
+      position:absolute;
+      left:50%;
+      bottom:28px;
+      width:190px;
+      height:37px;
+      transform:translateX(-50%);
+      border-top:1px solid rgba(62,130,151,.32);
+      border-radius:50%;
+    }
+    .basin::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:-6px;
+      width:8px;
+      height:8px;
+      border:1px solid rgba(53,126,150,.42);
+      border-radius:50%;
+      transform:translateX(-50%);
+      animation:basinRing 2.15s .9s infinite;
+    }
+    @keyframes tearFall{
+      0%{opacity:0;transform:translateY(-88px) scale(.66)}
+      23%{opacity:1}
+      76%{transform:translateY(54px) scale(1)}
+      100%{opacity:.82;transform:translateY(63px) scale(1)}
+    }
+    @keyframes basinRing{
+      0%{opacity:0;transform:translateX(-50%) scale(.28)}
+      30%{opacity:.52}
+      100%{opacity:0;transform:translateX(-50%) scale(4.8)}
+    }
+    .analysis-copy{min-height:68px;display:grid;place-items:center;text-align:center}
+    .analysis-line{
+      margin:0;
+      font-size:14px;
+      line-height:1.85;
+      letter-spacing:1.8px;
+      color:rgb(48,80,91);
+      transition:opacity .18s ease,transform .18s ease;
+    }
+    .analysis-line.changing{opacity:0;transform:translateY(4px)}
+    .emotion-line{color:rgb(43,103,122)}
+    .opening-composition{
+      margin:14px 0 3px;
+      padding:12px 0 13px;
+      border-top:1px solid rgba(61,105,119,.12);
+      border-bottom:1px solid rgba(61,105,119,.1);
+      opacity:0;
+      transform:translateY(6px);
+      transition:opacity .45s ease,transform .45s ease;
+    }
+    .opening-composition.show{opacity:1;transform:none}
+    .opening-composition-head{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      align-items:baseline;
+      gap:16px;
+      margin-bottom:11px;
+      font-family:ui-monospace,"SFMono-Regular",Consolas,monospace;
+      font-size:7px;
+      letter-spacing:1.35px;
+      color:rgb(94,121,130);
+    }
+    .opening-composition-head span{min-width:0;overflow-wrap:anywhere}
+    .opening-composition-head b{
+      margin-left:auto;
+      white-space:nowrap;
+      font-weight:400;
+      color:rgb(151,121,101);
+    }
+    .opening-emotion-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:10px 15px;
+    }
+    .opening-emotion{min-width:0;overflow-wrap:anywhere}
+    .opening-emotion span{
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      font-size:9px;
+      letter-spacing:.9px;
+      color:rgb(65,97,107);
+    }
+    .opening-emotion em{
+      font-family:ui-monospace,"SFMono-Regular",Consolas,monospace;
+      font-size:7px;
+      font-style:normal;
+      letter-spacing:.2px;
+      color:rgb(115,137,143);
+    }
+    .opening-emotion i{
+      display:block;
+      height:1px;
+      margin-top:5px;
+      overflow:hidden;
+      background:rgba(65,116,132,.13);
+    }
+    .opening-emotion i b{
+      display:block;
+      width:var(--value);
+      height:100%;
+      background:linear-gradient(90deg,rgba(75,143,163,.72),rgba(151,121,101,.6));
+      transform:scaleX(0);
+      transform-origin:left;
+    }
+    .opening-composition.show .opening-emotion i b{
+      animation:openingTrack .72s both cubic-bezier(.2,.7,.2,1);
+      animation-delay:calc(var(--index) * 85ms);
+    }
+    @keyframes openingTrack{
+      from{transform:scaleX(0)}
+      to{transform:scaleX(1)}
+    }
+    .choice{
+      display:grid;
+      justify-items:center;
+      gap:13px;
+      padding-top:14px;
+      border-top:1px solid rgba(61,105,119,.1);
+      opacity:0;
+      transform:translateY(6px);
+      pointer-events:none;
+      transition:.4s ease;
+    }
+    .choice.show{opacity:1;transform:none;pointer-events:auto}
+    .choice p{margin:0;font-size:10px;letter-spacing:1.3px;color:rgb(78,106,116)}
+    .choice-actions{display:flex;align-items:center;gap:20px}
+    .choice button{
+      border:0;
+      border-bottom:1px solid rgba(44,106,127,.38);
+      background:none;
+      color:rgb(40,93,111);
+      padding:6px 0;
+      font-size:10px;
+      letter-spacing:1.4px;
+      cursor:pointer;
+    }
+    .choice .skip{color:rgb(111,132,138);border-bottom-color:rgba(111,132,138,.25)}
+    .ripples{
+      position:fixed;
+      inset:0;
+      z-index:1200;
+      width:100%;
+      max-width:100vw;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    .water-ring{
+      position:fixed;
+      width:5px;
+      height:5px;
+      border:1px solid rgba(53,126,150,.52);
+      border-radius:50%;
+      transform:translate(-3px,-3px) scale(.32);
+      animation:concentricRipple .94s cubic-bezier(.16,.72,.3,1) forwards;
+    }
+    @keyframes concentricRipple{
+      0%{opacity:.7;transform:translate(-3px,-3px) scale(.32)}
+      62%{opacity:.2}
+      100%{opacity:0;transform:translate(-3px,-3px) scale(var(--end-scale))}
+    }
+    @media(max-width:920px){
+      .hero{grid-template-columns:1fr;padding:101px 7vw 58px;gap:37px}
+      .hero-title{font-size:56px}
+      .tear-specimen{max-width:460px}
+      .section-head,.dossier-grid,.links-grid,.draw-layout{grid-template-columns:1fr;gap:28px}
+      .style-editorial{grid-template-columns:minmax(220px,.72fr) minmax(0,1.28fr)}
+      .notice-board{grid-template-columns:1fr}
+      .notice-column{padding:22px 0}
+      .notice-column + .notice-column{
+        border-left:0;
+        border-top:1px solid rgba(58,103,118,.12);
+        padding-left:0;
+      }
+    }
+    @media(max-width:700px){
+      .top{
+        height:calc(56px + env(safe-area-inset-top,0px));
+        padding:
+          env(safe-area-inset-top,0px)
+          max(16px,env(safe-area-inset-right,0px))
+          0
+          max(16px,env(safe-area-inset-left,0px));
+        grid-template-columns:max-content minmax(0,1fr) 28px;
+        gap:10px;
+      }
+      .brand{max-width:76px;overflow:hidden;text-overflow:clip;font-size:7.5px;letter-spacing:1.3px}
+      .brand-long{display:none}
+      .brand-compact{display:inline}
+      .nav{justify-content:flex-start;gap:16px}
+      .nav button{min-height:42px;padding:10px 0;font-size:9.5px;letter-spacing:1.15px}
+      .music-toggle{width:28px;height:28px}
+      .hero{
+        padding:
+          calc(83px + env(safe-area-inset-top,0px))
+          max(18px,env(safe-area-inset-right,0px))
+          50px
+          max(18px,env(safe-area-inset-left,0px));
+        min-height:auto;
+        overflow:hidden;
+      }
+      .hero-copy,.tear-specimen{width:100%}
+      .hero-title{font-size:46px;letter-spacing:5px}
+      .rain-line,.mini-quote{overflow-wrap:anywhere;font-size:12px;letter-spacing:1.8px}
+      .fact-pill{max-width:100%;font-size:9.5px;padding:5px 7px;overflow-wrap:anywhere}
+      .mini-quote{font-size:9px}
+      .tear-specimen{max-width:100%}
+      .specimen-art svg{width:min(190px,64vw)}
+      .composition-head{gap:6px 12px;font-size:7px;letter-spacing:1px}
+      .component{grid-template-columns:82px minmax(34px,1fr) 30px;font-size:10px}
+      .ability-chart{width:min(100%,272px);padding-inline:6px}
+      .radar-label{font-size:10.5px;letter-spacing:1px}
+      .opening-emotion-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 16px}
+      .section{
+        padding:
+          64px
+          max(18px,env(safe-area-inset-right,0px))
+          64px
+          max(18px,env(safe-area-inset-left,0px));
+      }
+      .section-head{gap:11px;margin-bottom:27px}
+      .section-title{font-size:29px;letter-spacing:2.2px}
+      .section-note{font-size:10px}
+      .dossier-mark strong{font-size:25px}
+      .style-editorial{display:block}
+      .style-nav{padding:14px 0;border-right:0;border-bottom:1px solid rgba(55,103,118,.14)}
+      .style-tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 10px;overflow:visible}
+      .style-pill{
+        display:grid;
+        grid-template-columns:20px minmax(0,1fr) auto;
+        min-height:39px;
+        border-bottom:1px solid rgba(55,103,118,.08);
+        padding:6px 0;
+        width:100%;
+        max-width:100%;
+        gap:5px;
+      }
+      .style-pill:nth-child(odd){padding-right:10px;border-right:1px solid rgba(55,103,118,.08)}
+      .style-pill:nth-child(even){padding-left:10px}
+      .style-no{font-size:7px}
+      .style-name{font-size:10.5px;letter-spacing:1px;white-space:nowrap}
+      .style-dot{width:3px;height:3px}
+      .style-pill:hover,.style-pill.active{padding-left:0}
+      .style-pill:nth-child(even):hover,.style-pill:nth-child(even).active{padding-left:10px}
+      .style-pill.active::before{left:0;right:auto;top:auto;bottom:0;width:26px;height:1px}
+      .style-annotation{grid-template-columns:minmax(0,1fr) 38px;gap:14px;min-height:285px;padding:20px 0 22px}
+      .style-annotation-meta{gap:7px 14px}
+      .style-term{font-size:27px;letter-spacing:3px}
+      .style-explanation{font-size:14.5px;line-height:1.9;letter-spacing:1px}
+      .style-side-index{font-size:21px}
+      .notice-board{display:block}
+      .notice-column + .notice-column{padding-top:19px}
+      .link-row{grid-template-columns:42px minmax(0,1fr) 20px;gap:10px}
+      .link-row strong{font-size:17px}
+      .quote-band{
+        min-height:285px;
+        padding:
+          57px
+          max(18px,env(safe-area-inset-right,0px))
+          57px
+          max(18px,env(safe-area-inset-left,0px));
+      }
+      .quote-inner p{font-size:12.5px;line-height:1.8;letter-spacing:1.6px}
+      .draw-section{
+        padding:
+          64px
+          max(18px,env(safe-area-inset-right,0px))
+          75px
+          max(18px,env(safe-area-inset-left,0px));
+      }
+      .fortune{padding:17px;min-height:315px}
+      .fortune blockquote{font-size:14.5px}
+      .analysis-modal{
+        display:grid;
+        place-items:start center;
+        width:100%;
+        max-width:100%;
+        padding:
+          max(12px,calc(env(safe-area-inset-top,0px) + 12px))
+          max(12px,env(safe-area-inset-right,0px))
+          max(12px,calc(env(safe-area-inset-bottom,0px) + 12px))
+          max(12px,env(safe-area-inset-left,0px));
+        overflow-x:hidden;
+        overflow-y:auto;
+      }
+      .analysis-card{
+        width:min(670px,100%);
+        max-width:100%;
+        max-height:calc(100dvh - 24px);
+        margin:0 auto;
+        padding:17px 17px 20px;
+      }
+      .analysis-head{gap:8px 14px}
+      .analysis-visual{min-height:216px}
+      .analysis-line{font-size:12.5px;letter-spacing:1.4px}
+      .choice-actions{flex-wrap:wrap;gap:12px 18px}
+    }
+    @media(max-width:360px){
+      .top{gap:8px;grid-template-columns:max-content minmax(0,1fr) 27px}
+      .brand{max-width:68px;font-size:6.8px;letter-spacing:.8px}
+      .nav{gap:12px}
+      .nav button{font-size:9px;letter-spacing:.9px}
+      .music-toggle{width:27px;height:27px}
+      .hero{
+        padding:
+          calc(79px + env(safe-area-inset-top,0px))
+          max(15px,env(safe-area-inset-right,0px))
+          44px
+          max(15px,env(safe-area-inset-left,0px));
+      }
+      .hero-title{font-size:42px;letter-spacing:4px}
+      .specimen-art svg{width:min(176px,58vw)}
+      .component{grid-template-columns:74px minmax(30px,1fr) 28px;gap:6px;font-size:9.5px}
+      .ability-chart{width:100%;padding-inline:2px}
+      .opening-emotion-grid{grid-template-columns:1fr;gap:8px}
+      .section{
+        padding:
+          56px
+          max(15px,env(safe-area-inset-right,0px))
+          56px
+          max(15px,env(safe-area-inset-left,0px));
+      }
+      .style-tools{gap:0 7px}
+      .style-pill{grid-template-columns:18px minmax(0,1fr) auto;gap:4px}
+      .style-name{font-size:9.8px;letter-spacing:.7px}
+      .style-annotation{padding-right:0}
+      .style-explanation{font-size:13.5px}
+      .analysis-card{padding:15px 14px 18px}
+      .analysis-visual{min-height:188px}
+      .analysis-copy{min-height:60px}
+      .opening-composition-head{gap:7px}
+      .analysis-line{font-size:12px;letter-spacing:1.2px}
+    }
+    @media(max-height:560px){
+      .analysis-modal{
+        place-items:start center;
+        padding:
+          max(8px,env(safe-area-inset-top,0px))
+          max(8px,env(safe-area-inset-right,0px))
+          max(8px,env(safe-area-inset-bottom,0px))
+          max(8px,env(safe-area-inset-left,0px));
+      }
+      .analysis-card{
+        max-height:calc(100dvh - 16px);
+        padding:12px 18px 14px;
+      }
+      .analysis-head{padding-bottom:8px}
+      .analysis-visual{min-height:125px}
+      .analysis-visual::before{top:24px;height:80px}
+      .fall-tear{width:50px}
+      .basin{bottom:5px;width:150px;height:24px}
+      .analysis-copy{min-height:40px}
+      .analysis-line{font-size:11.5px;line-height:1.6;letter-spacing:1.2px}
+      .opening-composition{margin:7px 0 2px;padding:7px 0}
+      .opening-composition-head{margin-bottom:6px}
+      .opening-emotion-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px 12px}
+      .opening-emotion span{font-size:8px}
+      .opening-emotion i{margin-top:3px}
+      .choice{gap:6px;padding-top:7px}
+    }
+    @media(prefers-reduced-motion:reduce){
+      *,*::before,*::after{
+        scroll-behavior:auto!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
+      }
+    }
+  </style>
+</head>
+<body class="locked">
+  <section class="analysis-modal" id="analysisModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="analysis-card">
+      <div class="analysis-head">
+        <span id="modalTitle">一滴泪 · 实时鉴定</span>
+        <span class="live" id="labState">正在读取</span>
+      </div>
+      <div class="analysis-visual" aria-hidden="true">
+        <svg class="fall-tear" viewBox="0 0 100 140">
+          <defs>
+            <linearGradient id="modalDrop" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="rgb(183,226,238)"/>
+              <stop offset=".58" stop-color="rgb(105,177,200)"/>
+              <stop offset="1" stop-color="rgb(59,137,162)"/>
+            </linearGradient>
+          </defs>
+          <path d="M50 7C50 7 89 56 89 84A39 39 0 1 1 11 84C11 56 50 7 50 7Z" fill="url(#modalDrop)"/>
+          <path d="M36 75C36 93 49 104 62 100" fill="none" stroke="rgba(255,255,255,.82)" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+        <div class="basin"></div>
+      </div>
+      <div class="analysis-copy" aria-live="polite">
+        <p class="analysis-line" id="analysisLine">一滴泪，正在落向鉴定台。</p>
+      </div>
+      <div class="opening-composition" id="openingComposition" aria-label="开场眼泪成分" aria-hidden="true">
+        <div class="opening-composition-head">
+          <span>TEAR COMPOSITION / 眼泪成分</span>
+          <b>TOTAL 100%</b>
+        </div>
+        <div class="opening-emotion-grid">
+          <div class="opening-emotion" style="--value:24%;--index:0"><span><strong>幸福</strong><em>24%</em></span><i><b></b></i></div>
+          <div class="opening-emotion" style="--value:22%;--index:1"><span><strong>悲伤</strong><em>22%</em></span><i><b></b></i></div>
+          <div class="opening-emotion" style="--value:18%;--index:2"><span><strong>悔恨</strong><em>18%</em></span><i><b></b></i></div>
+          <div class="opening-emotion" style="--value:14%;--index:3"><span><strong>思念</strong><em>14%</em></span><i><b></b></i></div>
+          <div class="opening-emotion" style="--value:12%;--index:4"><span><strong>温柔</strong><em>12%</em></span><i><b></b></i></div>
+          <div class="opening-emotion" style="--value:10%;--index:5"><span><strong>未说出口的话</strong><em>10%</em></span><i><b></b></i></div>
+        </div>
+      </div>
+      <div class="choice" id="choice">
+        <p>是否查看鉴定师档案？</p>
+        <div class="choice-actions">
+          <button id="yesButton">是</button>
+          <button class="skip" id="skipButton">直接进入</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ripples" aria-hidden="true"></div>
+  <div class="shell" id="shell">
+    <header class="top">
+      <button class="brand" id="brand" aria-label="回到页面顶部">
+        <span class="brand-long">TEAR ARCHIVE</span><span class="brand-compact">TEAR</span> / 021
+      </button>
+      <nav class="nav" aria-label="页面导航">
+        <button data-target="dossier">档案</button>
+        <button data-target="style">风格</button>
+        <button data-target="notes">须知</button>
+        <button data-target="links">文档</button>
+        <button data-target="draw">泪签</button>
+      </nav>
+      <button class="music-toggle" id="musicToggle" aria-label="播放背景音乐" aria-pressed="false" title="播放背景音乐">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M9 18V5l11-2v13"/>
+          <circle cx="6" cy="18" r="3"/>
+          <circle cx="17" cy="16" r="3"/>
+        </svg>
+      </button>
+    </header>
+
+    <main>
+      <section class="hero" id="home">
+        <div class="hero-copy">
+          <p class="eyebrow">TEAR ANALYSIS / PRIVATE ARCHIVE</p>
+          <h1 class="hero-title">一滴<span>泪</span></h1>
+          <p class="rain-line">我叹缘分如雨淅淅沥沥</p>
+          <p class="mini-quote">一滴泪太轻　一颗心太重</p>
+        </div>
+
+        <aside class="tear-specimen" aria-label="一滴泪标本与鉴定师能力">
+          <div class="specimen-head">
+            <span>SPECIMEN A-021</span>
+            <span>已封存</span>
+          </div>
+          <div class="specimen-art">
+            <svg viewBox="0 0 300 410" aria-hidden="true">
+              <defs>
+                <linearGradient id="dropBlue" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="rgb(177,225,237)"/>
+                  <stop offset=".55" stop-color="rgb(99,177,201)"/>
+                  <stop offset="1" stop-color="rgb(54,126,151)"/>
+                </linearGradient>
+                <linearGradient id="glint" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="rgba(255,255,255,.9)"/>
+                  <stop offset="1" stop-color="rgba(255,255,255,.08)"/>
+                </linearGradient>
+              </defs>
+              <path d="M43 72H257M43 341H257M63 52V361M237 52V361" fill="none" stroke="rgba(69,126,145,.15)"/>
+              <path d="M150 23C150 23 228 127 228 207A78 78 0 1 1 72 207C72 127 150 23 150 23Z" fill="url(#dropBlue)"/>
+              <path d="M119 199C119 242 143 269 176 263" fill="none" stroke="rgba(255,255,255,.76)" stroke-width="8" stroke-linecap="round"/>
+              <path d="M93 223C100 179 127 126 150 91" fill="none" stroke="url(#glint)" stroke-width="10" stroke-linecap="round" opacity=".55"/>
+              <path d="M58 326C104 306 186 309 243 287" fill="none" stroke="rgba(65,131,153,.28)"/>
+              <circle cx="242" cy="142" r="3" fill="rgb(96,167,189)"/>
+              <circle cx="63" cy="264" r="2" fill="rgb(96,167,189)"/>
+            </svg>
+          </div>
+          <div class="ability-composition" aria-label="鉴定师能力">
+            <div class="composition-head">
+              <span>APPRAISER ABILITY / 鉴定师能力</span>
+              <b>ALL AXES / MAX</b>
+            </div>
+            <div class="ability-chart" role="img" aria-label="鉴定师能力六边形：共情、温柔、边界、洞察、倾听、表达均为满格">
+              <svg viewBox="0 0 300 270" aria-hidden="true">
+                <defs>
+                  <linearGradient id="radarWash" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="rgba(78,160,186,.58)"/>
+                    <stop offset=".58" stop-color="rgba(111,179,193,.4)"/>
+                    <stop offset="1" stop-color="rgba(173,142,119,.42)"/>
+                  </linearGradient>
+                </defs>
+                <g class="radar-grid">
+                  <polygon points="150,52 217.5,91 217.5,169 150,208 82.5,169 82.5,91"/>
+                  <polygon points="150,91.13 199.1,119.5 199.1,140.5 150,168.88 100.9,140.5 100.9,119.5"/>
+                  <polygon points="150,130.25 180.8,148 180.8,163 150,180.75 119.2,163 119.2,148"/>
+                </g>
+                <path class="radar-axis" d="M150 130V52M150 130L217.5 91M150 130L217.5 169M150 130V208M150 130L82.5 169M150 130L82.5 91"/>
+                <polygon class="radar-fill" points="150,52 217.5,91 217.5,169 150,208 82.5,169 82.5,91"/>
+                <circle class="radar-node" cx="150" cy="52" r="3.6"/>
+                <circle class="radar-node" cx="217.5" cy="91" r="3.6"/>
+                <circle class="radar-node" cx="217.5" cy="169" r="3.6"/>
+                <circle class="radar-node" cx="150" cy="208" r="3.6"/>
+                <circle class="radar-node" cx="82.5" cy="169" r="3.6"/>
+                <circle class="radar-node" cx="82.5" cy="91" r="3.6"/>
+                <circle cx="150" cy="130" r="2" fill="rgba(57,128,150,.7)"/>
+                <path class="radar-guide" d="M150 45V31M225 88L238 80M225 172L238 180M150 215V229M75 172L62 180M75 88L62 80"/>
+                <text class="radar-label" x="150" y="24" text-anchor="middle">共情</text>
+                <text class="radar-label" x="242" y="78" text-anchor="start">温柔</text>
+                <text class="radar-label" x="242" y="185" text-anchor="start">边界</text>
+                <text class="radar-label" x="150" y="250" text-anchor="middle">洞察</text>
+                <text class="radar-label" x="58" y="185" text-anchor="end">倾听</text>
+                <text class="radar-label" x="58" y="78" text-anchor="end">表达</text>
+              </svg>
+            </div>
+          </div>
+          <div class="specimen-foot">
+            <span>PRIVATE FORMULA</span>
+            <span>共情 / 温柔 / 边界 / 洞察</span>
+          </div>
+        </aside>
+      </section>
+
+      <section class="section" id="dossier">
+        <div class="inner">
+          <div class="section-head profile-head">
+            <div><p class="eyebrow">人物档案</p></div>
+          </div>
+          <div class="dossier-grid">
+            <div class="dossier-mark">
+              <strong>怀纾安</strong>
+              <span>PROFILE / 021</span>
+            </div>
+            <div class="profile-facts">
+              <span class="fact-pill accent">21 / INFP / 天平</span>
+              <span class="fact-pill accent">无性恋　稳定八无</span>
+              <span class="fact-pill">常驻 耳坠 ➔ 书虫 / 巫师 / 禁长等随机掉落</span>
+              <span class="fact-pill">高敏感　温柔</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section style-band" id="style">
+        <div class="inner">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">标签解释 / STYLE VOCABULARY</p>
+              <h2 class="section-title">靠近的方式</h2>
+            </div>
+            <p class="section-note">有些词只是名字，点开后，才是它们真正的温度。</p>
+          </div>
+          <div class="style-editorial">
+            <div class="style-nav">
+              <p class="style-nav-head"><span>INDEX / 词语索引</span><b>07</b></p>
+              <div class="style-tools" aria-label="风格词条">
+                <button class="style-pill active" data-style="atypical" data-index="01" aria-pressed="true">
+                  <span class="style-no">01</span><span class="style-name">非典型</span><span class="style-dot"></span>
+                </button>
+                <button class="style-pill" data-style="incisive" data-index="02" aria-pressed="false">
+                  <span class="style-no">02</span><span class="style-name">一针见血</span><span class="style-dot"></span>
+                </button>
+                <button class="style-pill" data-style="analyze" data-index="03" aria-pressed="false">
+                  <span class="style-no">03</span><span class="style-name">剖析</span><span class="style-dot"></span>
+                </button>
+                <button class="style-pill" data-style="plain" data-index="04" aria-pressed="false">
+                  <span class="style-no">04</span><span class="style-name">白话</span><span class="style-dot"></span>
+                </button>
+                <button class="style-pill" data-style="knight" data-index="05" aria-pressed="false">
+                  <span class="style-no">05</span><span class="style-name">白骑士</span><span class="style-dot"></span>
+                </button>
+                <button class="style-pill" data-style="pseudo" data-index="06" aria-pressed="false">
+                  <span class="style-no">06</span><span class="style-name">伪拯救</span><span class="style-dot"></span>
+                </button>
+                <button class="style-pill" data-style="romance" data-index="07" aria-pressed="false">
+                  <span class="style-no">07</span><span class="style-name">中高恋</span><span class="style-dot"></span>
+                </button>
+              </div>
+            </div>
+            <div class="style-annotation" id="styleAnnotation" data-ghost="一">
+              <div class="style-copy-wrap" id="styleCopyWrap" aria-live="polite">
+                <div class="style-annotation-meta">
+                  <span>STYLE NOTE / <b id="styleIndex">01</b></span>
+                  <span>PRIVATE ARCHIVE</span>
+                </div>
+                <div class="style-annotation-rule"></div>
+                <div>
+                  <p class="style-term" id="styleTerm">非典型</p>
+                  <p class="style-explanation" id="styleExplanation">不套用固定模板，让交流顺着当下的情绪与主题自然展开。</p>
+                </div>
+              </div>
+              <div class="style-side" aria-hidden="true">
+                <span class="style-side-index" id="styleSideIndex">01</span>
+                <span class="style-side-line"></span>
+                <span class="style-side-label">STYLE NOTE</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section notes-band" id="notes">
+        <div class="inner">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">须知</p>
+              <h2 class="section-title">请先读我</h2>
+            </div>
+            <p class="section-note">请仔细阅读须知。保持平等、尊重与清楚的边界。</p>
+          </div>
+          <div class="notice-board">
+            <section class="notice-column">
+              <h3>边界</h3>
+              <p class="notice-item"><strong>不接</strong>任何与 h 暴 / 高擦此类相关单子　请放过我</p>
+              <p class="notice-item"><strong>婉拒</strong>男板</p>
+              <p class="notice-item">婉拒在未告知的情况下将本次约会内容分享给他人</p>
+              <p class="notice-item">拒情侣一起来，我不要成为你们 play 的一环</p>
+              <p class="notice-item">不接受人身攻击 / 辱骂</p>
+              <p class="notice-item">我的自我意识很强，不要贬低我、攻击我</p>
+            </section>
+            <section class="notice-column">
+              <h3>相处</h3>
+              <p class="notice-item">务必提前告知雷点，若无告知将随机掉落</p>
+              <p class="notice-item">不接受以踩中暗雷为由的客诉，我直接给你退款 ➔ 永拒</p>
+              <p class="notice-item">我很欢迎你单后给我反馈，直白些也没关系，只要是你真的反馈就好</p>
+              <p class="notice-item">聊性欠了会掉落陪评</p>
+              <p class="notice-item">如果觉得不合适，半小时内｜剩一二十分钟内，可退可换</p>
+            </section>
+            <p class="notice-callout">请仔细阅读须知</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="links">
+        <div class="inner">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">文档入口</p>
+              <h2 class="section-title">两页薄笺</h2>
+            </div>
+            <p class="section-note">话术与板评，收在另外两张纸页里。</p>
+          </div>
+          <div class="links-grid">
+            <div class="dossier-mark">
+              <strong>落款</strong>
+              <span>DOCUMENT LINKS</span>
+            </div>
+            <div class="link-list">
+              <a class="link-row" href="https://www.kdocs.cn/l/cez0ff936oxd" target="_blank" rel="noreferrer">
+                <small>DOC 01</small><strong>话术</strong><span>↗</span>
+              </a>
+              <a class="link-row" href="https://www.kdocs.cn/l/cg04AJandUm4" target="_blank" rel="noreferrer">
+                <small>DOC 02</small><strong>板评</strong><span>↗</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="quote-band">
+        <div class="quote-inner">
+          <p>
+            <span>你可以为了很多事物驻足</span>
+            <span>路边的小猫</span>
+            <span>天边的云　树梢上的鸟</span>
+            <em>不必包括我</em>
+          </p>
+          <p class="quote-coda">一滴泪太轻　一颗心太重</p>
+        </div>
+      </section>
+
+      <section class="draw-section" id="draw">
+        <div class="inner">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">泪签 · 二十句</p>
+              <h2 class="section-title">向眼泪抽一签</h2>
+            </div>
+            <p class="section-note">每一滴泪落下之前，都已经在人间被写过很多次。</p>
+          </div>
+          <div class="draw-layout">
+            <div class="dossier-mark">
+              <strong>落泪有声</strong>
+              <span>TEAR LOTS / 20</span>
+            </div>
+            <div class="fortune" id="fortune">
+              <div class="fortune-kicker"><span>泪签</span><span id="fortuneNo">静候一签</span></div>
+              <div class="fortune-stage" aria-live="polite">
+                <blockquote id="quoteText">一滴泪太轻，一颗心太重。</blockquote>
+                <p class="fortune-source" id="quoteSource">怀纾安</p>
+              </div>
+              <button class="draw-button" id="drawButton">抽一签</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <audio
+    id="bgm"
+    preload="none"
+    loop
+    playsinline
+    src="https://music.163.com/song/media/outer/url?id=5331915.mp3"
+  ></audio>
+
+  <script>
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const analysisLine = document.getElementById("analysisLine");
+    const labState = document.getElementById("labState");
+    const openingComposition = document.getElementById("openingComposition");
+    const choice = document.getElementById("choice");
+    const modal = document.getElementById("analysisModal");
+    const shell = document.getElementById("shell");
+
+    function setLine(text, state, emotion = false) {
+      analysisLine.classList.add("changing");
+      window.setTimeout(() => {
+        analysisLine.textContent = text;
+        analysisLine.classList.toggle("emotion-line", emotion);
+        labState.textContent = state;
+        analysisLine.classList.remove("changing");
+      }, reduced ? 20 : 180);
+    }
+
+    const directPagePreview = new URLSearchParams(window.location.search).get("view") === "page";
+
+    if (directPagePreview) {
+      modal.hidden = true;
+      document.body.classList.remove("locked");
+    } else {
+      const openingSteps = [
+        [700, "正在鉴定：一滴泪，落向鉴定台。", "读取中", false],
+        [1480, "正在为您分配专属鉴定师……", "匹配中", false],
+        [2280, "鉴定师怀纾安已开始鉴定。", "鉴定中", false],
+        [3160, "成分检测完成：幸福、悲伤、悔恨、思念、温柔，还有未说出口的话，都封在这一滴泪里。", "成分读取", true],
+        [4020, "鉴定结束。眼泪里藏着的心事，已经归档。", "鉴定完成", false]
+      ];
+
+      openingSteps.forEach(([delay, text, state, emotion]) => {
+        window.setTimeout(() => setLine(text, state, emotion), reduced ? Math.min(delay, 240) : delay);
+      });
+
+      window.setTimeout(() => {
+        openingComposition.classList.add("show");
+        openingComposition.setAttribute("aria-hidden", "false");
+      }, reduced ? 140 : 2720);
+
+      window.setTimeout(() => {
+        choice.classList.add("show");
+        labState.textContent = "等待确认";
+      }, reduced ? 300 : 4780);
+    }
+
+    function enterArchive() {
+      modal.classList.add("closing");
+      document.body.classList.remove("locked");
+      shell.setAttribute("aria-hidden", "false");
+      window.setTimeout(() => {
+        modal.hidden = true;
+        window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
+      }, reduced ? 30 : 650);
+    }
+
+    document.getElementById("yesButton").addEventListener("click", enterArchive);
+    document.getElementById("skipButton").addEventListener("click", enterArchive);
+
+    const styles = {
+      atypical: { term: "非典型", copy: "不套用固定模板，让交流顺着当下的情绪与主题自然展开。", ghost: "一" },
+      incisive: { term: "一针见血", copy: "不绕开核心，直接指出情绪与关系中的关键处。", ghost: "针" },
+      analyze: { term: "剖析", copy: "把情绪、动机与话语背后的含义，逐层拆开来看。", ghost: "析" },
+      plain: { term: "白话", copy: "少用晦涩辞藻，以清楚、能听懂的话表达。", ghost: "白" },
+      knight: { term: "白骑士", copy: "以保护、偏护和接住情绪为叙事核心。", ghost: "骑" },
+      pseudo: { term: "伪拯救", copy: "带有戏剧性的拯救感，但不把这种姿态包装成真正的拯救。", ghost: "拯" },
+      romance: { term: "中高恋", copy: "恋感近期更偏中高恋，若无指定则随机掉落。", ghost: "恋" }
+    };
+    const styleCopyWrap = document.getElementById("styleCopyWrap");
+    const styleAnnotation = document.getElementById("styleAnnotation");
+    const styleTerm = document.getElementById("styleTerm");
+    const styleExplanation = document.getElementById("styleExplanation");
+    const styleIndex = document.getElementById("styleIndex");
+    const styleSideIndex = document.getElementById("styleSideIndex");
+    const styleButtons = document.querySelectorAll(".style-pill");
+
+    styleButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const item = styles[button.dataset.style];
+        styleButtons.forEach((other) => {
+          other.classList.remove("active");
+          other.setAttribute("aria-pressed", "false");
+        });
+        button.classList.add("active");
+        button.setAttribute("aria-pressed", "true");
+        styleCopyWrap.classList.add("is-changing");
+        styleAnnotation.classList.add("is-changing");
+        window.setTimeout(() => {
+          styleTerm.textContent = item.term;
+          styleExplanation.textContent = item.copy;
+          styleIndex.textContent = button.dataset.index;
+          styleSideIndex.textContent = button.dataset.index;
+          styleAnnotation.setAttribute("data-ghost", item.ghost);
+          styleCopyWrap.classList.remove("is-changing");
+          styleAnnotation.classList.remove("is-changing");
+        }, reduced ? 20 : 170);
+      });
+    });
+
+    document.querySelectorAll(".nav button").forEach((button) => {
+      button.addEventListener("click", () => document.getElementById(button.dataset.target)?.scrollIntoView({ behavior: "smooth" }));
+    });
+    document.getElementById("brand").addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+
+    const musicToggle = document.getElementById("musicToggle");
+    const bgm = document.getElementById("bgm");
+    const musicSources = [
+      "https://music.163.com/song/media/outer/url?id=5331915.mp3",
+      "https://music.163.com/song/media/outer/url?id=5331915"
+    ];
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    let musicSourceIndex = 0;
+    let audioContext = null;
+    let ambient = null;
+    let musicPlaying = false;
+    let musicBusy = false;
+    let musicLabelTimer = 0;
+
+    function updateMusicState(playing, label) {
+      musicPlaying = playing;
+      musicToggle.classList.toggle("is-playing", playing);
+      musicToggle.setAttribute("aria-pressed", String(playing));
+      const text = label || (playing ? "暂停背景音乐" : "播放背景音乐");
+      musicToggle.setAttribute("aria-label", text);
+      musicToggle.title = text;
+    }
+
+    function createAmbientSound() {
+      const now = audioContext.currentTime;
+      const master = audioContext.createGain();
+      const filter = audioContext.createBiquadFilter();
+      const sources = [];
+
+      master.gain.setValueAtTime(.0001, now);
+      master.gain.exponentialRampToValueAtTime(.52, now + 2.2);
+      master.connect(audioContext.destination);
+
+      filter.type = "lowpass";
+      filter.frequency.setValueAtTime(920, now);
+      filter.Q.setValueAtTime(.45, now);
+      filter.connect(master);
+
+      const notes = [
+        [130.81, "sine", .020, .037],
+        [164.81, "sine", .017, .029],
+        [196.00, "sine", .014, .041],
+        [246.94, "sine", .010, .033]
+      ];
+
+      notes.forEach(([frequency, type, level, drift], index) => {
+        const oscillator = audioContext.createOscillator();
+        const noteGain = audioContext.createGain();
+        const lfo = audioContext.createOscillator();
+        const lfoGain = audioContext.createGain();
+
+        oscillator.type = type;
+        oscillator.frequency.setValueAtTime(frequency, now);
+        oscillator.detune.setValueAtTime(index % 2 === 0 ? -3 : 3, now);
+
+        noteGain.gain.setValueAtTime(.0001, now);
+        noteGain.gain.exponentialRampToValueAtTime(level, now + 2.4 + index * .35);
+
+        lfo.frequency.setValueAtTime(drift, now);
+        lfoGain.gain.setValueAtTime(level * .32, now);
+        lfo.connect(lfoGain);
+        lfoGain.connect(noteGain.gain);
+
+        oscillator.connect(noteGain);
+        noteGain.connect(filter);
+        oscillator.start(now);
+        lfo.start(now);
+        sources.push(oscillator, lfo);
+      });
+
+      const noiseBuffer = audioContext.createBuffer(1, audioContext.sampleRate * 4, audioContext.sampleRate);
+      const noiseData = noiseBuffer.getChannelData(0);
+      let softNoise = 0;
+      for (let index = 0; index < noiseData.length; index += 1) {
+        const white = Math.random() * 2 - 1;
+        softNoise = softNoise * .992 + white * .008;
+        noiseData[index] = softNoise;
+      }
+
+      const noise = audioContext.createBufferSource();
+      const noiseFilter = audioContext.createBiquadFilter();
+      const noiseGain = audioContext.createGain();
+      noise.buffer = noiseBuffer;
+      noise.loop = true;
+      noiseFilter.type = "bandpass";
+      noiseFilter.frequency.setValueAtTime(680, now);
+      noiseFilter.Q.setValueAtTime(.7, now);
+      noiseGain.gain.setValueAtTime(.045, now);
+      noise.connect(noiseFilter);
+      noiseFilter.connect(noiseGain);
+      noiseGain.connect(master);
+      noise.start(now);
+      sources.push(noise);
+
+      return { master, sources };
+    }
+
+    async function startMusic() {
+      let lastError = null;
+      bgm.volume = .72;
+
+      for (let index = musicSourceIndex; index < musicSources.length; index += 1) {
+        musicSourceIndex = index;
+        bgm.src = musicSources[index];
+        bgm.load();
+        try {
+          await bgm.play();
+          updateMusicState(true);
+          return;
+        } catch (error) {
+          lastError = error;
+        }
+      }
+
+      if (AudioContextClass) {
+        await startAmbientMusic();
+        return;
+      }
+
+      throw lastError || new Error("No playable music source");
+    }
+
+    async function startAmbientMusic() {
+      if (!AudioContextClass) throw new Error("Web Audio is not available");
+      if (!audioContext || audioContext.state === "closed") {
+        audioContext = new AudioContextClass();
+      }
+      if (audioContext.state === "suspended") await audioContext.resume();
+      ambient = createAmbientSound();
+      updateMusicState(true);
+    }
+
+    async function stopMusic() {
+      bgm.pause();
+      if (!ambient || !audioContext) {
+        updateMusicState(false);
+        return;
+      }
+
+      const current = ambient;
+      const now = audioContext.currentTime;
+      ambient = null;
+      updateMusicState(false);
+      current.master.gain.cancelScheduledValues(now);
+      current.master.gain.setValueAtTime(Math.max(current.master.gain.value, .0001), now);
+      current.master.gain.exponentialRampToValueAtTime(.0001, now + .55);
+
+      window.setTimeout(() => {
+        current.sources.forEach((source) => {
+          try {
+            source.stop();
+          } catch (error) {
+            // A source may already be stopped when the page is being unloaded.
+          }
+          source.disconnect();
+        });
+        current.master.disconnect();
+      }, reduced ? 30 : 620);
+    }
+
+    musicToggle.addEventListener("click", async () => {
+      if (musicBusy) return;
+      musicBusy = true;
+      musicToggle.disabled = true;
+      window.clearTimeout(musicLabelTimer);
+
+      try {
+        if (musicPlaying) {
+          await stopMusic();
+        } else {
+          await startMusic();
+        }
+      } catch (error) {
+        console.error("Background music could not start:", error);
+        updateMusicState(false, "音乐暂时无法播放，请检查网络后重试");
+        musicLabelTimer = window.setTimeout(() => updateMusicState(false), 3600);
+      } finally {
+        musicBusy = false;
+        musicToggle.disabled = false;
+      }
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden && musicPlaying && audioContext?.state === "suspended") {
+        audioContext.resume().catch(() => {});
+      }
+    });
+
+    window.addEventListener("pagehide", () => {
+      bgm.pause();
+      if (audioContext && audioContext.state !== "closed") audioContext.close();
+    });
+
+    const rippleLayer = document.querySelector(".ripples");
+    document.addEventListener("pointerdown", (event) => {
+      if (!modal.hidden && !modal.classList.contains("closing")) return;
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+      for (let index = 0; index < 9; index += 1) {
+        const ring = document.createElement("i");
+        ring.className = "water-ring";
+        ring.style.left = `${event.clientX}px`;
+        ring.style.top = `${event.clientY}px`;
+        ring.style.animationDelay = `${index * 44}ms`;
+        ring.style.setProperty("--end-scale", String(3.4 + index * 1.5));
+        rippleLayer.appendChild(ring);
+        window.setTimeout(() => ring.remove(), 1450);
+      }
+    });
+
+    const quotes = [
+      ["执手相看泪眼，竟无语凝噎。", "柳永《雨霖铃》"],
+      ["相顾无言，惟有泪千行。", "苏轼《江城子·乙卯正月二十日夜记梦》"],
+      ["细看来，不是杨花，点点是离人泪。", "苏轼《水龙吟·次韵章质夫杨花词》"],
+      ["春蚕到死丝方尽，蜡炬成灰泪始干。", "李商隐《无题》"],
+      ["沧海月明珠有泪，蓝田日暖玉生烟。", "李商隐《锦瑟》"],
+      ["物是人非事事休，欲语泪先流。", "李清照《武陵春·春晚》"],
+      ["泪湿罗衣脂粉满，四叠阳关，唱到千千遍。", "李清照《蝶恋花·泪湿罗衣脂粉满》"],
+      ["感时花溅泪，恨别鸟惊心。", "杜甫《春望》"],
+      ["出师未捷身先死，长使英雄泪满襟。", "杜甫《蜀相》"],
+      ["念天地之悠悠，独怆然而涕下。", "陈子昂《登幽州台歌》"],
+      ["座中泣下谁最多？江州司马青衫湿。", "白居易《琵琶行》"],
+      ["夜深忽梦少年事，梦啼妆泪红阑干。", "白居易《琵琶行》"],
+      ["便做春江都是泪，流不尽，许多愁。", "秦观《江城子·西城杨柳弄春柔》"],
+      ["明月楼高休独倚，酒入愁肠，化作相思泪。", "范仲淹《苏幕遮·怀旧》"],
+      ["愁肠已断无由醉，酒未到，先成泪。", "范仲淹《御街行·秋日怀旧》"],
+      ["泪眼问花花不语，乱红飞过秋千去。", "欧阳修《蝶恋花·庭院深深深几许》"],
+      ["寸寸柔肠，盈盈粉泪，楼高莫近危阑倚。", "欧阳修《踏莎行·候馆梅残》"],
+      ["多少泪珠何限恨，倚阑干。", "李煜《浪淘沙令·帘外雨潺潺》"],
+      ["胭脂泪，相留醉，几时重。", "李煜《相见欢·林花谢了春红》"],
+      ["泪眼倚楼频独语。双燕来时，陌上相逢否？", "冯延巳《鹊踏枝·几日行云何处去》"]
+    ];
+    let bag = [];
+    let drawCount = 0;
+
+    function shuffled() {
+      const list = quotes.map((_, index) => index);
+      for (let index = list.length - 1; index > 0; index -= 1) {
+        const target = Math.floor(Math.random() * (index + 1));
+        [list[index], list[target]] = [list[target], list[index]];
+      }
+      return list;
+    }
+
+    const fortune = document.getElementById("fortune");
+    const quoteText = document.getElementById("quoteText");
+    const quoteSource = document.getElementById("quoteSource");
+    const drawButton = document.getElementById("drawButton");
+    const fortuneNo = document.getElementById("fortuneNo");
+
+    drawButton.addEventListener("click", () => {
+      if (bag.length === 0) bag = shuffled();
+      const quote = quotes[bag.pop()];
+      drawCount += 1;
+      drawButton.disabled = true;
+      fortune.classList.add("drawing");
+      window.setTimeout(() => {
+        quoteText.textContent = `「${quote[0]}」`;
+        quoteSource.textContent = `—— ${quote[1]}`;
+        fortuneNo.textContent = `签 · ${String(drawCount).padStart(2, "0")}`;
+        if (bag.length === 0) {
+          fortuneNo.textContent = "二十签已圆满";
+          drawButton.textContent = "重新抽签";
+        } else {
+          drawButton.textContent = "再抽一签";
+        }
+        fortune.classList.remove("drawing");
+        drawButton.disabled = false;
+      }, reduced ? 20 : 230);
+    });
+  </script>
+</body>
+</html>
